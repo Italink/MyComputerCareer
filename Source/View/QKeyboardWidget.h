@@ -23,6 +23,7 @@ private:
 		QRect region;
 		QString text;
 		bool pressed = false;
+		bool advancedDisplay = false;
 		QColor textColor = Qt::white;
 		QColor baseColor = QColor(0, 0, 0, 150);
  		QColor hoverdColor = QColor(0, 0, 0, 200);

@@ -151,12 +151,14 @@ void QKeyboardWidget::initVirtKeyMap()
 
 	mVirtKeyRectMap[VK_STATISTICS].region = QRect(1075, 5, 40, 40);
 	mVirtKeyRectMap[VK_STATISTICS].text = "⛵";
+	mVirtKeyRectMap[VK_STATISTICS].advancedDisplay = true;
 	mVirtKeyRectMap[VK_STATISTICS].clickedCallback = [this]() {
 		showStatistics(true);
 	};
 
 	mVirtKeyRectMap[VK_AUTO_START].region = QRect(1120, 5, 40, 40);
 	mVirtKeyRectMap[VK_AUTO_START].text = "√";
+	mVirtKeyRectMap[VK_AUTO_START].advancedDisplay = true;
 	bool autoStart = QMyComputerCareerSettings::Instance()->isAutoStartOnWindows();
 	mVirtKeyRectMap[VK_AUTO_START].textColor = autoStart ? Qt::green : Qt::white;
 	mVirtKeyRectMap[VK_AUTO_START].clickedCallback = [this]() {
@@ -168,6 +170,7 @@ void QKeyboardWidget::initVirtKeyMap()
 
 	mVirtKeyRectMap[VK_CLOSE].region = QRect(1165, 5, 40, 40);
 	mVirtKeyRectMap[VK_CLOSE].hoverdColor = Qt::red;
+	mVirtKeyRectMap[VK_CLOSE].advancedDisplay = true;
 	mVirtKeyRectMap[VK_CLOSE].text = "X";
 	mVirtKeyRectMap[VK_CLOSE].clickedCallback = []() {
 		QMyComputerCareerSettings::Instance()->save();
@@ -250,6 +253,8 @@ void QKeyboardWidget::paintEvent(QPaintEvent* event)
 	QPoint virtualMousePos = (mousePos * scale).toPoint();
 	for (auto item : mVirtKeyRectMap.asKeyValueRange()) {
 		quint32 vkCode = item.first;
+		if (!bHovered && item.second.advancedDisplay)
+			continue;
 		QRect rect = item.second.region;
 		rect.setCoords(rect.left() / scale.x(), rect.top() / scale.y(), rect.right() / scale.x(), rect.bottom() / scale.y());
 		if (item.second.pressed) {
