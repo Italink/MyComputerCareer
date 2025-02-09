@@ -55,7 +55,7 @@ void QMyComputerCareerSettings::save()
 	QJsonArray lastWindowGeomtry;
 	jsonObject["LastWindowGeomtry"] = rectToJsonArray(mLastWindowGeomtry);
 	jsonObject["SaveIntervalSec"] = mSaveIntervalSec;
-	QString confiPath = mWorkDir.absoluteFilePath("config.json");
+	QString confiPath = mWorkDir.absoluteFilePath("Config.json");
 	QJsonDocument jsonDoc(jsonObject);
 	QByteArray jsonData = jsonDoc.toJson();
 	QFile file(confiPath);
@@ -67,7 +67,7 @@ void QMyComputerCareerSettings::save()
 
 void QMyComputerCareerSettings::load()
 {
-	QString confiPath = mWorkDir.absoluteFilePath("config.json");
+	QString confiPath = mWorkDir.absoluteFilePath("Config.json");
 	QFile file(confiPath);
 	QByteArray jsonData;
 	if (file.open(QIODevice::ReadWrite)) {
