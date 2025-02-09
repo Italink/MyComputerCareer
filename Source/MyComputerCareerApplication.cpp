@@ -54,14 +54,16 @@ QMyComputerCareerApplication::QMyComputerCareerApplication(int& argc, char** arg
 	: QApplication(argc, argv)
 	, mEventSaveThread(QSharedPointer<QEventSaveThread>::create(this))
 {
-	mKeyboradWidget = new QKeyboardWidget;
-	initialize();
-	SystemInputHook::Instance()->startup(std::bind(&QMyComputerCareerApplication::onKeyEvent, this, std::placeholders::_1), std::bind(&QMyComputerCareerApplication::onMouseEvent, this, std::placeholders::_1));
-	mEventSaveThread->start();
-	mKeyboradWidget->show();
-	QRect rect = QMyComputerCareerSettings::Instance()->lastWindowGeomtry();
-	if (!rect.isEmpty()) {
-		mKeyboradWidget->setGeometry(rect);
+	mSharedMemory.setKey("MyComputerCareer");
+	if (mSharedMemory.attach()) {
+		isRunning = true;
+	}
+	else {
+		isRunning = false;
+		if (!mSharedMemory.create(1)) {
+			;
+			return;
+		}
 	}
 }
 
@@ -76,6 +78,8 @@ QMyComputerCareerApplication::~QMyComputerCareerApplication()
 
 void QMyComputerCareerApplication::initialize()
 {
+	setWindowIcon(QIcon(":/Resources/Icon.png"));
+	mKeyboradWidget = new QKeyboardWidget;
 	QMyComputerCareerSettings::Instance()->load();
 	QDir workDir = QMyComputerCareerSettings::Instance()->workDir();
 	if (!workDir.exists() || !workDir.exists("History/UserInput")) {
@@ -91,6 +95,14 @@ void QMyComputerCareerApplication::initialize()
 	QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
 	QJsonObject jsonObject = jsonDoc.object();
 	mLocalUserInputStatistics = UserInputStatistics::fromJsonObject(jsonObject);
+	
+	SystemInputHook::Instance()->startup(std::bind(&QMyComputerCareerApplication::onKeyEvent, this, std::placeholders::_1), std::bind(&QMyComputerCareerApplication::onMouseEvent, this, std::placeholders::_1));
+	mEventSaveThread->start();
+	mKeyboradWidget->show();
+	QRect rect = QMyComputerCareerSettings::Instance()->lastWindowGeomtry();
+	if (!rect.isEmpty()) {
+		mKeyboradWidget->setGeometry(rect);
+	}
 }
 
 void QMyComputerCareerApplication::save(QString message)
@@ -213,4 +225,9 @@ void QMyComputerCareerApplication::onMouseEvent(const MinimizedInputEvent_Mouse&
 const UserInputStatistics& QMyComputerCareerApplication::getLocalUserInputStatistics()
 {
 	return mLocalUserInputStatistics;
+}
+
+bool QMyComputerCareerApplication::isAppRunning() const
+{
+	return isRunning;
 }

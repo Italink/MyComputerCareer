@@ -18,9 +18,13 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${PROJECT_SOURCE})
 
  qt_add_resources(QRC_FILE Resources.qrc)
 
+ enable_language("RC")
+ set (WIN32_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Resources.rc)
+
 qt_add_executable(appMyComputerCareer
     ${PROJECT_SOURCE}
     ${QRC_FILE}
+    ${WIN32_RESOURCES}
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

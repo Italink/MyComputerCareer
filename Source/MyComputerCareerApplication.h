@@ -7,10 +7,12 @@
 #include <QSet>
 #include <QThread>
 #include <QQueue>
+#include <QSharedMemory>
 #include <QSharedPointer>
 #include "Hook/SystemInputHook.h"
 #include "View/QKeyboardWidget.h"
 #include "View/QToast.h"
+#include <QMessageBox>
 #include "View/QUserInputStatisticsWidget.h"
 
 class QMyComputerCareerApplication : public QApplication{
@@ -19,10 +21,10 @@ class QMyComputerCareerApplication : public QApplication{
 public:
 	QMyComputerCareerApplication(int& argc, char** argv);
 	~QMyComputerCareerApplication();
-
 	const UserInputStatistics& getLocalUserInputStatistics();
-private:
+	bool isAppRunning() const;
 	void initialize();
+private:
 	void save(QString message);
 	QToast* spawnToast(QString text);
 	void onKeyEvent(const MinimizedInputEvent_Keyboard& keyEvent);
@@ -36,6 +38,8 @@ protected:
 	QSet<quint32> mPressedKeys;
 	QToast* mCurrentToast = nullptr;
 	QQueue<QToast*> mToastQueue;
+	QSharedMemory mSharedMemory;
+	bool isRunning;
 };
 
 #endif // QMyComputerCareerApplication_h__
