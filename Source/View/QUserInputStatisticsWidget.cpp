@@ -122,7 +122,7 @@ float QUserInputStatisticsWidget::calcHeight(const UserInputStatistics& mUserInp
 {
 	QFontMetrics metrics(QFont("Roboto", 7));
 	const int rowHeight = metrics.height();
-	return (Spacing + rowHeight) * (mUserInputStatistics.keyUseCount.size() + 1) / 2 + 20 + 100;
+	return (Spacing + rowHeight) * (mUserInputStatistics.keyUseCount.size() / 2 + 1) + 20 + 50;
 }
 
 UserInputStatistics QUserInputStatisticsWidget::userInputStatistics() const
@@ -166,8 +166,7 @@ void QUserInputStatisticsWidget::paintEvent(QPaintEvent* event)
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing);
 	painter.setRenderHint(QPainter::TextAntialiasing);
-
-	const int rowHeight = painter.fontMetrics().height();
+;
 	float progress = qBound(0.f, mAnimator.elapsed() / 500.0f, 1.f);
 	float background = qBound(0.f, progress, 0.2f) * 5;
 	painter.setOpacity(background);
@@ -183,7 +182,9 @@ void QUserInputStatisticsWidget::paintEvent(QPaintEvent* event)
 	QRect subtitle(0, 25, width(), 15);
 	painter.setPen(QColor(220, 220, 220));
 	painter.drawText(subtitle, Qt::AlignVCenter | Qt::AlignCenter, "nothing but enthusiasm brightens up the endless years.");
-
+	
+	painter.setFont(QFont("Roboto", 7));
+	const int rowHeight = painter.fontMetrics().height();
 	for (int i = 0; i < mKeyUseCountList.size() / 2; i++) {
 		QColor color = mKeyColorList[i];
 		QRect rect(0, 0, 60, rowHeight);
