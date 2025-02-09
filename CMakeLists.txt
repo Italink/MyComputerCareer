@@ -9,7 +9,7 @@ set(CMAKE_AUTOUIC ON)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_property(GLOBAL PROPERTY AUTOGEN_SOURCE_GROUP "Generated Files")
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Widgets Svg Network)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Widgets Svg)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -34,7 +34,7 @@ set_target_properties(appMyComputerCareer PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 target_link_libraries(appMyComputerCareer
-    PRIVATE Qt6::Svg Qt6::Widgets Qt6::Network
+    PRIVATE Qt6::Svg Qt6::Widgets
 )
 
 target_include_directories(appMyComputerCareer PUBLIC Source)
