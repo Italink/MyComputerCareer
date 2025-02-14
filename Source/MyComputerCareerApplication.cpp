@@ -37,7 +37,7 @@ public:
 					QS.flush();
 					mApp->mEventDataPool.clear();
 				}
-				QThread::sleep(5);
+				QThread::sleep(30);
 				if (timer.elapsed() > QMyComputerCareerSettings::Instance()->saveIntervalSec() * 1000.0f) {
 					mApp->save("[submit] sync user input");
 					timer.restart();
@@ -103,6 +103,8 @@ void QMyComputerCareerApplication::initialize()
 	if (!rect.isEmpty()) {
 		mKeyboradWidget->setGeometry(rect);
 	}
+	mWheelHoldTimer.setInterval(30);
+	connect(&mWheelHoldTimer, &QTimer::timeout, this, &QMyComputerCareerApplication::onUpdateWheelState);
 }
 
 void QMyComputerCareerApplication::save(QString message)
@@ -211,15 +213,48 @@ void QMyComputerCareerApplication::onMouseEvent(const MinimizedInputEvent_Mouse&
 			mKeyboradWidget->setKeyPressed(VK_LBUTTON, true);
 		if (mouseEvent.button & Qt::RightButton)
 			mKeyboradWidget->setKeyPressed(VK_RBUTTON, true);
+		if (mouseEvent.button & Qt::MiddleButton)
+			mKeyboradWidget->setKeyPressed(VK_MBUTTON, true);
 	}	
 	if (mouseEvent.type == QEvent::MouseButtonRelease) {
 		if (mouseEvent.button & Qt::LeftButton)
 			mKeyboradWidget->setKeyPressed(VK_LBUTTON, false);
 		if (mouseEvent.button & Qt::RightButton)
 			mKeyboradWidget->setKeyPressed(VK_RBUTTON, false);
+		if (mouseEvent.button & Qt::MiddleButton)
+			mKeyboradWidget->setKeyPressed(VK_MBUTTON, false);
+	}
+	if (mouseEvent.type == QEvent::Wheel) {
+		if (mouseEvent.delta > 0) {
+			mKeyboradWidget->setKeyPressed(VK_MBUTTON_UP, true);
+			mKeyboradWidget->setKeyPressed(VK_MBUTTON_DOWN, false);
+		}
+		else if (mouseEvent.delta < 0) {
+			mKeyboradWidget->setKeyPressed(VK_MBUTTON_UP, false);
+			mKeyboradWidget->setKeyPressed(VK_MBUTTON_DOWN, true);
+		}
+		mWheelHoldTime = 0.2;
+		mWheelHoldTimer.start();
+		mKeyboradWidget->update();
+	}
+	else {
+		mKeyboradWidget->setKeyPressed(VK_MBUTTON_UP, false);
+		mKeyboradWidget->setKeyPressed(VK_MBUTTON_DOWN, false);
 	}
 	mEventDataPool << data;
 	mKeyboradWidget->update();
+}
+
+void QMyComputerCareerApplication::onUpdateWheelState()
+{
+	if (mWheelHoldTime < 0) {
+		mWheelHoldTimer.stop();
+		mKeyboradWidget->setKeyPressed(VK_MBUTTON_UP, false);
+		mKeyboradWidget->setKeyPressed(VK_MBUTTON_DOWN, false);
+		mKeyboradWidget->update();
+		return;
+	}
+	mWheelHoldTime -= 0.03;
 }
 
 const UserInputStatistics& QMyComputerCareerApplication::getLocalUserInputStatistics()

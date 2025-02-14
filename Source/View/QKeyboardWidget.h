@@ -4,6 +4,17 @@
 #include <QWidget>
 #include "QUserInputStatisticsWidget.h"
 
+const QSize VirtualKeyboardSize(1215, 270);
+
+const quint32 VK_CUSTOM = 10000;
+const quint32 VK_NULL = VK_CUSTOM + 1;
+const quint32 VK_RRETURN = VK_CUSTOM + 2;
+const quint32 VK_STATISTICS = VK_CUSTOM + 3;
+const quint32 VK_AUTO_START = VK_CUSTOM + 4;
+const quint32 VK_CLOSE = VK_CUSTOM + 5;
+const quint32 VK_MBUTTON_UP = VK_CUSTOM + 6;
+const quint32 VK_MBUTTON_DOWN = VK_CUSTOM + 7;
+
 class QKeyboardWidget : public QWidget {
 public:
 	QKeyboardWidget(QWidget* parent = nullptr);

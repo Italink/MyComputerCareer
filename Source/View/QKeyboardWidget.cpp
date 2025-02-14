@@ -10,15 +10,6 @@
 #include "MyComputerCareerApplication.h"
 #include "MyComputerCareerSettings.h"
 
-const QSize VirtualKeyboardSize(1215, 270);
-
-const quint32 VK_CUSTOM = 10000;
-const quint32 VK_NULL = VK_CUSTOM + 1;
-const quint32 VK_RRETURN = VK_CUSTOM + 2;
-const quint32 VK_STATISTICS = VK_CUSTOM + 3;
-const quint32 VK_AUTO_START = VK_CUSTOM + 4;
-const quint32 VK_CLOSE = VK_CUSTOM + 5;
-
 QKeyboardWidget::QKeyboardWidget(QWidget* parent) 
 	: QWidget(parent)
 {
@@ -139,13 +130,21 @@ void QKeyboardWidget::initVirtKeyMap()
 	currentY += 40 + 5;
 
 	fillRow(sixthRowVK, currentY);
-	mVirtKeyRectMap[VK_LBUTTON].region = QRect(1075, 50, 60, 130);
-	mVirtKeyRectMap[VK_RBUTTON].region = QRect(1145, 50, 60, 130);
+	mVirtKeyRectMap[VK_LBUTTON].region = QRect(1075, 50, 40, 130);
+	mVirtKeyRectMap[VK_RBUTTON].region = QRect(1165, 50, 40, 130);
 
 	for (auto key : mVirtKeyRectMap.asKeyValueRange()) {
 		mVirtKeyRectMap[key.first].text = SystemInputHook::getShortKeyNameByVkCode(key.first);
 	}
 	mVirtKeyRectMap[VK_RRETURN].text = SystemInputHook::getShortKeyNameByVkCode(VK_RETURN);
+
+	mVirtKeyRectMap[VK_MBUTTON_UP].region = QRect(1120, 50, 40, 40);
+	mVirtKeyRectMap[VK_MBUTTON_UP].text = "▲";
+
+	mVirtKeyRectMap[VK_MBUTTON].region = QRect(1120, 95, 40, 40);
+
+	mVirtKeyRectMap[VK_MBUTTON_DOWN].region = QRect(1120, 140, 40, 40);
+	mVirtKeyRectMap[VK_MBUTTON_DOWN].text = "▼";
 
 	mVirtKeyRectMap[VK_NULL].region = QRect(1075, 185, 130, 85);
 

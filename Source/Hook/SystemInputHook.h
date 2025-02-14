@@ -14,6 +14,7 @@ struct MinimizedInputEvent
 struct MinimizedInputEvent_Mouse :public MinimizedInputEvent {
 	Qt::MouseButton button;
 	QPoint position;
+	qint32 delta = 0;
 };
 
 struct MinimizedInputEvent_Keyboard :public MinimizedInputEvent {

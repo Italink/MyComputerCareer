@@ -44,7 +44,6 @@ QList<QColor> generateRandomColorList(int size) {
 }
 
 QColor getRandomColor(int index) {
-
 	static QList<QColor> Colors;
 	if (Colors.size() <= index) {
 		Colors = generateRandomColorList(qMin(128, index + 1));
@@ -108,7 +107,6 @@ QJsonObject UserInputStatistics::toJsonObject()
 	jsonObject["keyUsePerHourCount"] = keyUsePerHourCountObject;
 	return jsonObject;
 }
-
 
 QUserInputStatisticsWidget::QUserInputStatisticsWidget()
 {

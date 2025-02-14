@@ -29,6 +29,7 @@ private:
 	QToast* spawnToast(QString text);
 	void onKeyEvent(const MinimizedInputEvent_Keyboard& keyEvent);
 	void onMouseEvent(const MinimizedInputEvent_Mouse& mouseEvent);
+	void onUpdateWheelState();
 protected:
 	QKeyboardWidget* mKeyboradWidget = nullptr;
 	QList<QString> mEventDataPool;
@@ -40,6 +41,8 @@ protected:
 	QQueue<QToast*> mToastQueue;
 	QSharedMemory mSharedMemory;
 	bool isRunning;
+	float mWheelHoldTime;
+	QTimer mWheelHoldTimer;
 };
 
 #endif // QMyComputerCareerApplication_h__

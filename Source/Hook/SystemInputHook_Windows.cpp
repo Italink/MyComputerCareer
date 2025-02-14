@@ -392,6 +392,7 @@ LRESULT CALLBACK WindowsMouseHookCallback(int nCode, WPARAM wParam, LPARAM lPara
 	if (nCode == HC_ACTION){
 		QEvent::Type type = QEvent::Type::None;
 		Qt::MouseButton button = Qt::NoButton;
+		qint32 delta = 0;
 		PMSLLHOOKSTRUCT windowsMouse = (PMSLLHOOKSTRUCT)lParam;
 		switch (wParam) {
 		case WM_MOUSEMOVE:
@@ -440,6 +441,9 @@ LRESULT CALLBACK WindowsMouseHookCallback(int nCode, WPARAM wParam, LPARAM lPara
 			type = QEvent::NonClientAreaMouseButtonRelease; button = Qt::RightButton; break;
 		case WM_NCRBUTTONDBLCLK:
 			type = QEvent::NonClientAreaMouseButtonPress; button = Qt::RightButton; break;
+		case WM_MOUSEWHEEL:
+		case WM_MOUSEHWHEEL:
+			delta = (SHORT)HIWORD(windowsMouse->mouseData); type = QEvent::Wheel; button = Qt::MiddleButton; break;
 		default: // WM_MOUSELEAVE
 			break;
 			return CallNextHookEx(NULL, nCode, wParam, lParam);
@@ -451,7 +455,7 @@ LRESULT CALLBACK WindowsMouseHookCallback(int nCode, WPARAM wParam, LPARAM lPara
 			buttons &= (~button);
 		}
 		qint64 timestamp = QDateTime::currentDateTime().toMSecsSinceEpoch();
-		MinimizedInputEvent_Mouse mouseEvent{ type ,timestamp, button, QPoint(windowsMouse->pt.x, windowsMouse->pt.y) };
+		MinimizedInputEvent_Mouse mouseEvent{ type ,timestamp, button, QPoint(windowsMouse->pt.x, windowsMouse->pt.y), delta };
 		Q_EMIT SystemInputHook::Instance()->invokeMouseEvent(mouseEvent);
 	}
 	return CallNextHookEx(NULL, nCode, wParam, lParam);
