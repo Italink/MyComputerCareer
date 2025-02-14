@@ -17,7 +17,7 @@ QKeyboardWidget::QKeyboardWidget(QWidget* parent)
 	setAttribute(Qt::WA_TranslucentBackground);
 	setMouseTracking(true);
 	initVirtKeyMap();
-	resize(500, 150);
+	resize(500, 130);
 }
 
 void QKeyboardWidget::setKeyPressed(quint32 vkCode, bool bPressed)
